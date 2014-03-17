@@ -6,7 +6,17 @@ local function Engine()
 	function self:addEntity(entity)
 		assert(entity, "No entity given to add to engine.")
 		table.insert(entities, entity)
+		entity.engine = self
 		return self
+	end
+
+	function self:removeEntity(entity)
+		for i,e in ipairs(entities) do
+			if e == entity then
+				table.remove(entities, i)
+				return self
+			end
+		end
 	end
 
 	function self:addSystem(system)
