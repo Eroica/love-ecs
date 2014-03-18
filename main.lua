@@ -1,7 +1,8 @@
 function love.load()
-	Entity = require "ecs.entity"
-	System = require "ecs.system"
-	Engine = require "ecs.engine"
+	local ecs = require 'ecs'
+	Entity = ecs.Entity
+	System = ecs.System
+	Engine = ecs.Engine
 
 	require "components"
 	require "systems"
