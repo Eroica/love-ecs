@@ -85,7 +85,28 @@ function PlayerControls()
 end
 
 function Walking(walkSpeed)
-	return { speed = walkSpeed or 400 }
+	local self = {}
+	local speed = walkSpeed
+	local walking = false
+	local direction = 1
+
+	function self:setWalking(_direction)
+		if _direction and _direction ~= 0 then
+			direction = math.sign(_direction)
+		end
+		walking = _direction ~= 0
+		return self
+	end
+
+	function self:getSpeed()
+		return speed
+	end
+
+	function self:getWalking()
+		return walking, direction
+	end
+
+	return self
 end
 
 function Jumping(jumpSpeed)

@@ -38,7 +38,16 @@ function YFloorSystem(floor)
 end
 
 function WalkingSystem()
-	return System()
+	return System(Rectangle, Walking)
+		:addEventListener("update", function(entity, dt)
+			local walking = entity:get(Walking)
+			local rectangle = entity:get(Rectangle)
+			local isWalking, direction = walking:getWalking()
+
+			if isWalking then
+				rectangle:move(walking:getSpeed() * direction, 0, dt)
+			end
+		end)
 end
 
 function InputSystem()
@@ -48,13 +57,16 @@ function InputSystem()
 			local rectangle = entity:get(Rectangle)
 			local walking = entity:get(Walking)
 
+			local dir = 0
 			if input:movingLeft() then
-				rectangle:move(-walking.speed, 0, dt)
+				dir = dir - 1
 			end
 			if input:movingRight() then
-				rectangle:move(walking.speed, 0, dt)
+				dir = dir + 1
 			end
+			walking:setWalking(dir)
 		end)
+
 		:addEventListener("keypressed", function(entity, key)
 			local input = entity:get(PlayerControls)
 			local velocity = entity:get(Velocity)

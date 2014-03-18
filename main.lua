@@ -23,6 +23,7 @@ function love.load()
 		:addSystem(GravitySystem())
 		:addSystem(YFloorSystem(love.window.getHeight()))
 		:addSystem(InputSystem())
+		:addSystem(WalkingSystem())
 
 	function love.keypressed(k)
 		if k == 'escape' then
