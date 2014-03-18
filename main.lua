@@ -1,14 +1,11 @@
 function love.load()
-	local ecs = require 'ecs'
-	Entity = ecs.Entity
-	System = ecs.System
-	Engine = ecs.Engine
+	ecs = require 'ecs'
 
 	require "components"
 	require "systems"
 	require "functions"
 
-	local player = Entity()
+	local player = ecs.Entity()
 		:add(Rectangle, 10, 10, 50, 50)
 		:add(Velocity)
 		:add(Drawing, drawRect)
@@ -17,7 +14,7 @@ function love.load()
 		:add(Jumping, 800)
 		:add(PlayerControls)
 
-	local engine = Engine()
+	local engine = ecs.Engine()
 		:addEntity(player)
 		:addSystem(DrawingSystem())
 		:addSystem(VelocitySystem())

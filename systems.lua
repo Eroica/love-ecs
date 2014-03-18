@@ -1,12 +1,12 @@
 function DrawingSystem()
-	return System(Drawing)
+	return ecs.System(Drawing)
 		:addEventListener("draw", function(entity)
 			entity:get(Drawing):draw(entity)
 		end)
 end
 
 function VelocitySystem()
-	return System(Rectangle, Velocity)
+	return ecs.System(Rectangle, Velocity)
 		:addEventListener("update", function(entity, dt)
 			local rectangle, velocity = entity:get(Rectangle, Velocity)
 			local vx, vy = velocity:getVector()
@@ -15,7 +15,7 @@ function VelocitySystem()
 end
 
 function GravitySystem()
-	return System(Velocity, Gravity)
+	return ecs.System(Velocity, Gravity)
 		:addEventListener("update", function(entity, dt)
 			local velocity, gravity = entity:get(Velocity, Gravity)
 			velocity:add(0, gravity.force, dt)
@@ -23,7 +23,7 @@ function GravitySystem()
 end
 
 function YFloorSystem(floor)
-	return System(Rectangle, Velocity, Gravity)
+	return ecs.System(Rectangle, Velocity, Gravity)
 		:addEventListener("update", function(entity, dt)
 			local rectangle, velocity = entity:get(Rectangle, Velocity)
 			local x, y, width, height = rectangle:getBBox()
@@ -35,7 +35,7 @@ function YFloorSystem(floor)
 end
 
 function WalkingSystem()
-	return System(Rectangle, Walking)
+	return ecs.System(Rectangle, Walking)
 		:addEventListener("update", function(entity, dt)
 			local walking, rectangle = entity:get(Walking, Rectangle)
 			local isWalking, direction = walking:getWalking()
@@ -46,7 +46,7 @@ function WalkingSystem()
 end
 
 function InputSystem()
-	return System(PlayerControls, Walking, Jumping)
+	return ecs.System(PlayerControls, Walking, Jumping)
 		:addEventListener("update", function(entity, dt)
 			local input, walking = entity:get(PlayerControls, Walking)
 			local dir = 0
@@ -68,5 +68,5 @@ function InputSystem()
 end
 
 function AISystem()
-	return System(Walking, Jumping)
+	return ecs.System(Walking, Jumping)
 end
