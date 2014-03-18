@@ -39,5 +39,6 @@ function love.load()
 
 	function love.draw()
 		engine:fireEvent("draw")
+		love.graphics.print(love.timer.getFPS(), 10, 10)
 	end
 end

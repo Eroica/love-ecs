@@ -110,7 +110,17 @@ function Walking(walkSpeed)
 end
 
 function Jumping(jumpSpeed)
-	return { speed = jumpSpeed or 800 }
+	local self = {}
+	jumpSpeed = jumpSpeed or 800
+
+	function self:jump(entity)
+		local velocity = entity:get(Velocity)
+		if velocity then
+			velocity:setVector(nil, -jumpSpeed)
+		end
+	end
+
+	return self
 end
 
 function Gravity(force)

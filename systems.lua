@@ -46,7 +46,7 @@ function WalkingSystem()
 end
 
 function InputSystem()
-	return System(PlayerControls, Velocity, Walking, Jumping)
+	return System(PlayerControls, Walking, Jumping)
 		:addEventListener("update", function(entity, dt)
 			local input, walking = entity:get(PlayerControls, Walking)
 			local dir = 0
@@ -60,9 +60,13 @@ function InputSystem()
 		end)
 
 		:addEventListener("keypressed", function(entity, key)
-			local input, velocity, jumping = entity:get(PlayerControls, Velocity, Jumping)
+			local input, jumping = entity:get(PlayerControls, Jumping)
 			if input:jumping(key) then
-				velocity:setVector(nil, -jumping.speed)
+				jumping:jump(entity)
 			end
 		end)
+end
+
+function AISystem()
+	return System(Walking, Jumping)
 end
