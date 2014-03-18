@@ -13,8 +13,12 @@ local function Entity()
 		return self
 	end
 
-	function self:get(component)
-		return components[component]
+	function self:get(...)
+		local componentList = {}
+		for i,component in ipairs{...} do
+			componentList[i] = components[component]
+		end
+		return unpack(componentList)
 	end
 
 	function self:addToEngine(engine)
