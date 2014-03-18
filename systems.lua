@@ -48,7 +48,7 @@ end
 function InputSystem()
 	return System(PlayerControls, Velocity, Walking, Jumping)
 		:addEventListener("update", function(entity, dt)
-			local input = entity:get(PlayerControls, Walking)
+			local input, walking = entity:get(PlayerControls, Walking)
 			local dir = 0
 			if input:movingLeft() then
 				dir = dir - 1
