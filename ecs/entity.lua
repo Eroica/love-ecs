@@ -14,9 +14,10 @@ local function Entity()
 	end
 
 	function self:get(...)
+		local args = {...}
 		local componentList = {}
-		for i,component in ipairs{...} do
-			componentList[i] = components[component]
+		for i=1, #args do
+			componentList[i] = components[args[i]]
 		end
 		return unpack(componentList)
 	end

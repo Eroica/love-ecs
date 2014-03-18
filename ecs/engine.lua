@@ -11,8 +11,8 @@ local function Engine()
 	end
 
 	function self:removeEntity(entity)
-		for i,e in ipairs(entities) do
-			if e == entity then
+		for i=1, #entities do
+			if entities[i] == entity then
 				table.remove(entities, i)
 				return self
 			end
@@ -26,8 +26,8 @@ local function Engine()
 	end
 
 	function self:fireEvent(event, ...)
-		for i,system in ipairs(systems) do
-			system:fireEvent(event, entities, ...)
+		for i=1, #systems do
+			systems[i]:fireEvent(event, entities, ...)
 		end
 		return self
 	end

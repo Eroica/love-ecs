@@ -4,8 +4,8 @@ local function System(...)
 	local eventListeners = {}
 
 	local function hasRequiredComponents(entity)
-		for i,component in ipairs(requiredComponents) do
-			if not entity:get(component) then
+		for i=1, #requiredComponents do
+			if not entity:get(requiredComponents[i]) then
 				return false
 			end
 		end
@@ -19,10 +19,11 @@ local function System(...)
 	end
 
 	function self:fireEvent(event, entities, ...)
-		for i,listener in ipairs(eventListeners[event] or {}) do
-			for i,entity in ipairs(entities) do
-				if hasRequiredComponents(entity) then
-					listener(entity, ...)
+		local listeners = eventListeners[event] or {}
+		for i=1, #listeners do
+			for j=1, #entities do
+				if hasRequiredComponents(entities[j]) then
+					listeners[i](entities[j], ...)
 				end
 			end
 		end
