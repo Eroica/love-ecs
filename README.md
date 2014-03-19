@@ -3,6 +3,49 @@ love-ecs
 
 love-ecs is an implementation of the [entity-component system game design pattern](http://en.wikipedia.org/wiki/Entity_component_system) using closure-based OO.
 
+Reference
+---------
+
+### Entities
+The entity is a container for components that define its behavior. Constructor: `entity = ecs.Entity()`
+
+`entity:add(component, arg1, arg2, ...)`: Adds a component to an entity. Accepts component _constructors_, not the components themselves.
+
+`entity:remove(component)`: Removes a component by constructor.
+
+`local comp1, comp2, compn = entity:get(component1, component2, ...)`: Get one or more components from the entity, again, by constructor.
+
+`entity:destroy()`: Removes the entity from the engine.
+
+### Components
+Components are simply functions or functables that return a table to be stored in an entity.
+
+```lua
+function myComponent(value)
+  return { value = value }
+end
+```
+
+### Systems
+Systems are the logic in your game that operate on the components of entities. Constructor: `system = ecs.System()`
+
+`system:addEventListener(event, func)`: Create an event listener for the system. The listener function receives an entity to operate on, and any additional event arguments.
+
+`system:fireEvent(event, entityList, ...)`: Fire an event on an individual system and a list of entities.
+
+### Engines
+The engine is the container for entities and systems to be used, and is a middle-man group object for event handling towards systems. Constructor: `engine = ecs.Engine()`
+
+`engine:addEntity(entity)`: Add an entity to the engine.
+
+`engine:removeEntity(entity)`: Remove an entity from the engine.
+
+`engine:addSystem(system)`: Add a system to the engine.
+
+`engine:removeSystem(system)`: Remove a system from the engine.
+
+`engine:fireEvent(event, ...)`: Send an event to systems in the engine.
+
 Example Usage
 -------------
 ```lua

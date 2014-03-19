@@ -103,10 +103,6 @@ local function Entity()
 		return unpack(componentList)
 	end
 
-	function self:addToEngine(engine)
-		engine:addEntity(self)
-	end
-
 	function self:destroy()
 		if self.engine then
 			self.engine:removeEntity(self)
