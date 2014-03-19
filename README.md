@@ -27,7 +27,7 @@ end
 ```
 
 ### Systems
-Systems are the logic in your game that operate on the components of entities. Constructor: `system = ecs.System()`
+Systems are the logic in your game that operate on the components of entities. You have the option of passing a set of components that each entity used by the system is required to have. Constructor: `system = ecs.System(requiredComponent1, requiredComponent2, ...)`
 
 `system:addEventListener(event, func)`: Create an event listener for the system. The listener function receives an entity to operate on, and any additional event arguments.
 

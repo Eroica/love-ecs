@@ -50,6 +50,9 @@ local function System(...)
 	local eventListeners = {}
 
 	local function hasRequiredComponents(entity)
+		if #requiredComponents == 0 then
+			return true
+		end
 		for i=1, #requiredComponents do
 			if not entity:get(requiredComponents[i]) then
 				return false
