@@ -1,7 +1,7 @@
 love-ecs
 ========
 
-love-ecs is an implementation of the entity-component system game design pattern using closure-based OO.
+love-ecs is an implementation of the [entity-component system game design pattern](http://en.wikipedia.org/wiki/Entity_component_system) using closure-based OO.
 
 Example Usage
 -------------
