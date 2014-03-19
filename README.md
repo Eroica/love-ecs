@@ -73,3 +73,5 @@ function love.draw()
   engine:fireEvent("draw")
 end
 ```
+
+A more advanced example can be found in the example folder.

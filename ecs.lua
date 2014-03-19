@@ -3,6 +3,15 @@ local function Engine()
 	local entities = {}
 	local systems = {}
 
+	local function searchAndDestroy(list, target)
+		for i=1, #list do
+			if list[i] == target then
+				table.remove(list, i)
+				return
+			end
+		end
+	end
+
 	function self:addEntity(entity)
 		assert(entity, "No entity given to add to engine.")
 		table.insert(entities, entity)
@@ -11,18 +20,18 @@ local function Engine()
 	end
 
 	function self:removeEntity(entity)
-		for i=1, #entities do
-			if entities[i] == entity then
-				table.remove(entities, i)
-				return self
-			end
-		end
+		searchAndDestroy(entities, entity)
+		return self
 	end
 
 	function self:addSystem(system)
 		assert(system, "No system given to add to engine.")
 		table.insert(systems, system)
 		return self
+	end
+
+	function self:removeSystem(system)
+		searchAndDestroy(systems, system)
 	end
 
 	function self:fireEvent(event, ...)
@@ -55,12 +64,12 @@ local function System(...)
 		return self
 	end
 
-	function self:fireEvent(event, entities, ...)
+	function self:fireEvent(event, entityList, ...)
 		local listeners = eventListeners[event] or {}
 		for i=1, #listeners do
-			for j=1, #entities do
-				if hasRequiredComponents(entities[j]) then
-					listeners[i](entities[j], ...)
+			for j=1, #entityList do
+				if hasRequiredComponents(entityList[j]) then
+					listeners[i](entityList[j], ...)
 				end
 			end
 		end
