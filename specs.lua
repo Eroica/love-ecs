@@ -166,11 +166,12 @@ describe("Engine", function()
 	end)
 
 	it("allows chaining!", function()
-		assert.has_no.errors(function()
-			local engine = ecs.Engine()
+		local engine = ecs.Engine()
+		assert.is_true(
+			engine
 				:addEntity(ecs.Entity())
-				:addSystem(ecs.System)
-		end)
+				:addSystem(ecs.System) == engine
+		)
 	end)
 
 	it("passes events to systems and uses its entities as arguments", function()
