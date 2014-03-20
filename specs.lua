@@ -170,7 +170,7 @@ describe("Engine", function()
 		assert.is_true(
 			engine
 				:addEntity(ecs.Entity())
-				:addSystem(ecs.System) == engine
+				:addSystem(ecs.System()) == engine
 		)
 	end)
 
