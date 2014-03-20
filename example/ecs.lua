@@ -1,3 +1,11 @@
+local allEvents = {
+	'update', 'draw',
+	'keypressed', 'keyreleased', 'textinput',
+	'mousepressed', 'mousereleased', 'mousefocus',
+	'focus', 'resize', 'visible',
+	'quit',
+}
+
 local function Engine()
 	local self = {}
 	local entities = {}
@@ -32,6 +40,7 @@ local function Engine()
 
 	function self:removeSystem(system)
 		searchAndDestroy(systems, system)
+		return self
 	end
 
 	function self:fireEvent(event, ...)
@@ -118,8 +127,49 @@ local function Entity()
 	return self
 end
 
+local function EngineStack()
+	local self = {}
+	local stack = { Engine() }
+
+	function self:switch(engine)
+		local prev = self:current():fireEvent("leave")
+		stack = { engine }
+		self:fireEvent("enter", prev)
+		return self
+	end
+
+	function self:push(engine)
+		table.insert(stack, engine)
+		self:fireEvent("enter", stack[#stack - 1])
+		return self
+	end
+
+	function self:pop()
+		local engine = table.remove(stack, #stack)
+		engine:fireEvent("leave")
+		return self
+	end
+
+	function self:current()
+		return stack[#stack]
+	end
+
+	function self:fireEvent(...)
+		self:current():fireEvent(...)
+		return self
+	end
+
+	function self:registerEvents(events)
+		events = events or allEvents
+		return self
+	end
+
+	return self
+end
+
 return {
 	Entity = Entity,
 	System = System,
 	Engine = Engine,
+	EngineStack = EngineStack,
 }
