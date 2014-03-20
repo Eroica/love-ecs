@@ -181,8 +181,7 @@ describe("Engine", function()
 
 			local speechSystem = ecs.System(speechComponent)
 				:addEventListener("speak", function(entity)
-					local speech = entity:get(speechComponent)
-					speech.speak()
+					entity:get(speechComponent).speak()
 				end)
 
 			local engine = ecs.Engine()
