@@ -16,6 +16,12 @@ function drawingComponent(drawFunc)
 	return { draw = drawFunc }
 end
 
+function speechComponent(name)
+	return { speak = function()
+		print("I am an entity, and my name is " .. name)
+	end }
+end
+
 describe("Component", function()
 	it("is just a function!", function()
 		assert.is_true(type(emptyComponent) == "function")
@@ -108,10 +114,80 @@ describe("System", function()
 		local system = ecs.System()
 		assert.is_true(
 			system
-				:addEventListener("update", function()
+				:addEventListener("chain", function()
 					print "I was fired through chaining!"
 				end)
-				:fireEvent("update") == system
+				:fireEvent("chain") == system
 		)
+	end)
+end)
+
+describe("Engine", function()
+	local engine = ecs.Engine()
+
+	it("holds entities", function()
+		assert.has_no.errors(function()
+			engine:addEntity(ecs.Entity())
+		end)
+	end)
+
+	it("removes entities", function()
+		assert.has_no.errors(function()
+			local ent = ecs.Entity()
+			engine:addEntity(ent)
+			engine:removeEntity(ent)
+		end)
+	end)
+
+	it("errors on nil entities", function()
+		assert.has.errors(function()
+			engine:addEntity(undefinedEntity)
+		end)
+	end)
+
+	it("holds systems", function()
+		assert.has_no.errors(function()
+			engine:addSystem(ecs.System())
+		end)
+	end)
+
+	it("removes systems", function()
+		assert.has_no.errors(function()
+			local ent = ecs.System()
+			engine:addSystem(ent)
+			engine:removeSystem(ent)
+		end)
+	end)
+
+	it("errors on nil systems", function()
+		assert.has.errors(function()
+			engine:addSystem(undefinedSystem)
+		end)
+	end)
+
+	it("allows chaining!", function()
+		assert.has_no.errors(function()
+			local engine = ecs.Engine()
+				:addEntity(ecs.Entity())
+				:addSystem(ecs.System)
+		end)
+	end)
+
+	it("passes events to systems and uses its entities as arguments", function()
+		assert.has_no.errors(function()
+			local entity1 = ecs.Entity():add(speechComponent, "generic entity no. 1")
+			local entity2 = ecs.Entity():add(speechComponent, "generic entity no. 2")
+
+			local speechSystem = ecs.System(speechComponent)
+				:addEventListener("speak", function(entity)
+					local speech = entity:get(speechComponent)
+					speech.speak()
+				end)
+
+			local engine = ecs.Engine()
+				:addEntity(entity1)
+				:addEntity(entity2)
+				:addSystem(speechSystem)
+		end)
 	end)
 end)

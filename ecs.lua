@@ -32,6 +32,7 @@ local function Engine()
 
 	function self:removeSystem(system)
 		searchAndDestroy(systems, system)
+		return self
 	end
 
 	function self:fireEvent(event, ...)
