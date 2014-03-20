@@ -189,6 +189,8 @@ describe("Engine", function()
 				:addEntity(entity1)
 				:addEntity(entity2)
 				:addSystem(speechSystem)
+
+			engine:fireEvent("speak")
 		end)
 	end)
 end)
