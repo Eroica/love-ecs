@@ -1,3 +1,11 @@
+local allEvents = {
+	'update', 'draw',
+	'keypressed', 'keyreleased', 'textinput',
+	'mousepressed', 'mousereleased', 'mousefocus',
+	'focus', 'resize', 'visible',
+	'quit',
+}
+
 local function Engine()
 	local self = {}
 	local entities = {}
@@ -119,8 +127,35 @@ local function Entity()
 	return self
 end
 
+local function EngineStack()
+	local self = {}
+	local stack = { Engine() }
+
+	function self:currentEngine()
+		return stack[#stack]
+	end
+
+	function self:switch(newEngine)
+		-- etc
+		return self
+	end
+
+	function self:fireEvent(...)
+		currentEngine:fireEvent(...)
+		return self
+	end
+
+	function self:registerEvents(events)
+		events = events or allEvents
+		return self
+	end
+
+	return self
+end
+
 return {
 	Entity = Entity,
 	System = System,
 	Engine = Engine,
+	EngineStack = EngineStack,
 }
