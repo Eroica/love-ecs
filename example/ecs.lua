@@ -36,7 +36,13 @@ local function Engine()
 
 	function self:fireEvent(event, ...)
 		for i=1, #systems do
-			systems[i]:fireEvent(event, entities, ...)
+			local system = systems[i]
+			for i=1, #entities do
+				local entity = entities[i]
+				if system:hasRequiredComponents(entity) then
+					system:fireEvent(event, entity, ...)
+				end
+			end
 		end
 		return self
 	end
@@ -49,7 +55,7 @@ local function System(...)
 	local requiredComponents = {...}
 	local eventListeners = {}
 
-	local function hasRequiredComponents(entity)
+	function self:hasRequiredComponents(entity)
 		if #requiredComponents == 0 then
 			return true
 		end
@@ -67,14 +73,10 @@ local function System(...)
 		return self
 	end
 
-	function self:fireEvent(event, entityList, ...)
+	function self:fireEvent(event, ...)
 		local listeners = eventListeners[event] or {}
 		for i=1, #listeners do
-			for j=1, #entityList do
-				if hasRequiredComponents(entityList[j]) then
-					listeners[i](entityList[j], ...)
-				end
-			end
+			listeners[i](...)
 		end
 		return self
 	end
