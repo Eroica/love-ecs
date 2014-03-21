@@ -194,8 +194,129 @@ describe("Engine", function()
 	end)
 
 	it("can bind events that don't process entities", function()
-		ecs.Engine()
-			:addEventListener("test", function(msg) print(msg) end)
-			:fireEvent("test", "Engine event handler test!")
+		assert.has_no.errors(function()
+			ecs.Engine()
+				:addEventListener("test", function(msg) print(msg) end)
+				:fireEvent("test", "Engine event handler test!")
+		end)
+	end)
+end)
+
+describe("State Manager", function()
+	it("emulates gamestate functionality with engines", function()
+		assert.has_no.errors(function()
+			local menu = ecs.Engine():addEventListener("print-current", function()
+				print "current state: menu"
+			end)
+
+			local game = ecs.Engine():addEventListener("print-current", function()
+				print "current state: game"
+			end)
+
+			local stateman = ecs.StateManager()
+			stateman:switch(menu)
+			stateman:fireEvent("print-current")
+			stateman:switch(game)
+			stateman:fireEvent("print-current")
+		end)
+	end)
+
+	it("also chains!", function()
+		local num = 0
+		local counter = ecs.Engine():addEventListener("count",
+			function() num = num + 1; print(num) end)
+		local stateman = ecs.StateManager()
+		assert.is.equal(
+			stateman
+				:switch(counter)
+				:fireEvent("count")
+				:fireEvent("count")
+				:fireEvent("count"),
+			stateman
+		)
+	end)
+
+	it("can obtain the current state", function()
+		local stateman = ecs.StateManager()
+		local game = ecs.Engine()
+
+		stateman:switch(game)
+		assert.is.equal(stateman:current(), game)
+	end)
+
+	it("sends events to the current state", function()
+		local updated = false
+		local game = ecs.Engine():addEventListener("update", function() updated = true end)
+
+		ecs.StateManager():switch(game):fireEvent("update")
+		assert.is_true(updated)
+	end)
+
+	it("can register events in LOVE's event handlers", function()
+		local updated, drawn, gameupdate, gamedraw
+
+		love = {
+			update = function() updated = true end,
+			draw = function() drawn = true end,
+		}
+
+
+		local game = ecs.Engine()
+			:addEventListener("update", function() gameupdate = true end)
+			:addEventListener("draw", function() gamedraw = true end)
+
+		-- the state manager's events
+		ecs.StateManager()
+			:registerEvents()
+			:switch(game)
+			:fireEvent("update")
+			:fireEvent("draw")
+
+		-- the love.run event loop
+		love.update()
+		love.draw()
+
+		assert.is_true(updated)
+		assert.is_true(drawn)
+		assert.is_true(gameupdate)
+		assert.is_true(gamedraw)
+	end)
+
+	it("sends enter (with previous state) and leave events when switching", function()
+		local stateman = ecs.StateManager()
+		local entered = false
+		local left = false
+
+		local game = ecs.Engine()
+			:addEventListener("enter", function(prev)
+				assert.truthy(prev)
+				entered = true
+			end)
+			:addEventListener("leave", function()
+				left = true
+			end)
+
+		stateman:switch(game)
+		stateman:switch(ecs.Engine())
+
+		assert.is_true(entered)
+		assert.is_true(left)
+	end)
+
+	it("has a state stack", function()
+		local stateman = ecs.StateManager()
+		local game = ecs.Engine()
+		local pause = ecs.Engine()
+
+		stateman:switch(game)
+		stateman:push(pause)
+		stateman:pop()
+
+		assert.is.equal(stateman:current(), game)
+	end)
+
+	it("returns false on :pop() if there is only one state in the stack", function()
+		local stateman = ecs.StateManager():switch(ecs.Engine())
+		assert.is_false(stateman:pop())
 	end)
 end)
