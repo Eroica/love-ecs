@@ -126,3 +126,21 @@ end
 function Gravity(force)
 	return { force = force or 1000 }
 end
+
+function Menu(...)
+	local args = {...}
+	assert(#args > 0, "No arguments given to menu component.")
+	assert(#args % 2 == 0, "Length of arguments for menu component must be even \
+		(string, function, string, function, ...).")
+
+	local self = { selection = 1, options = {} }
+
+	for i=1, #args, 2 do
+		table.insert(self.options, {
+			label = args[i],
+			action = args[i + 1],
+		})
+	end
+
+	return self
+end

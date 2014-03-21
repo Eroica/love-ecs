@@ -66,3 +66,39 @@ function InputSystem()
 			end
 		end)
 end
+
+function MenuSystem()
+	local x, y = 50, 50
+	return ecs.System(Menu)
+		:addEventListener("keypressed", function(entity, k)
+			local menu = entity:get(Menu)
+			if k == 'down' then
+				menu.selection = menu.selection < #menu.options and menu.selection + 1 or 1
+			elseif k == 'up' then
+				menu.selection = menu.selection > 1 and menu.selection - 1 or #menu.options
+			elseif k == 'return' then
+				menu.options[menu.selection].action()
+			end
+		end)
+
+		:addEventListener("draw", function(entity)
+			local menu = entity:get(Menu)
+			love.graphics.setNewFont(36)
+
+			for i,option in ipairs(menu.options) do
+				if i == menu.selection then
+					love.graphics.setColor(255, 255, 255)
+				else
+					love.graphics.setColor(120, 120, 120)
+				end
+				love.graphics.print(option.label, x, y + (i - 1)*40)
+			end
+		end)
+end
+
+function EscapeToState(state)
+	return ecs.System()
+		:addEventListener("keypressed", function(_, k)
+			
+		end)
+end
