@@ -95,10 +95,3 @@ function MenuSystem()
 			end
 		end)
 end
-
-function EscapeToState(state)
-	return ecs.System()
-		:addEventListener("keypressed", function(_, k)
-			
-		end)
-end

@@ -9,15 +9,27 @@ function MainMenu(gamestate)
 	return ecs.Engine()
 		:addEntity(menu)
 		:addSystem(MenuSystem())
+		:addEventListener("keypressed", function(k)
+			if k == 'escape' then
+				love.event.quit()
+			end
+		end)
 end
 
 function Game(gamestate)
 	return ecs.Engine()
 		:addEntity(createPlayer())
+
 		:addSystem(DrawingSystem())
 		:addSystem(VelocitySystem())
 		:addSystem(GravitySystem())
 		:addSystem(YFloorSystem(love.window.getHeight()))
 		:addSystem(InputSystem())
 		:addSystem(WalkingSystem())
+
+		:addEventListener("keypressed", function(k)
+			if k == 'escape' then
+				gamestate:switch(MainMenu(gamestate))
+			end
+		end)
 end

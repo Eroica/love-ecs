@@ -7,15 +7,12 @@ function love.load()
 	require "functions"
 	require "engines"
 
-	local gamestate = ecs.StateKeeper()
+	local gamestate = ecs.StateManager()
 	gamestate:registerEvents()
 	gamestate:switch(MainMenu(gamestate))
 end
 
 function love.keypressed(k)
-	if k == 'escape' then
-		love.event.quit()
-	end
 end
 
 function love.draw()
