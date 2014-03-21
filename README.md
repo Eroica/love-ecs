@@ -7,7 +7,8 @@ Reference
 ---------
 
 ### Entities
-The entity is a container for components that define its behavior. Constructor: `entity = ecs.Entity()`
+`entity = ecs.Entity()`
+The entity is a container for components that define its behavior. 
 
 `entity:add(component, arg1, arg2, ...)`: Adds a component to an entity. Accepts component _constructors_, not the components themselves.
 
@@ -27,22 +28,30 @@ end
 ```
 
 ### Systems
-Systems are the logic in your game that operate on the components of entities. You have the option of passing a set of components that each entity used by the system is required to have. Constructor: `system = ecs.System(requiredComponent1, requiredComponent2, ...)`
+`system = ecs.System(requiredComponent1, requiredComponent2, ...)`
+Systems are the logic in your game that operate on the components of entities. You have the option of passing a set of components that each entity used by the system is required to have.
 
 `system:addEventListener(event, func)`: Create an event listener for the system. The listener function receives an entity to operate on, and any additional event arguments.
 
 `system:fireEvent(event, entityList, ...)`: Fire an event on an individual system and a list of entities.
 
 ### Engines
-The engine is the container for entities and systems to be used, and is a middle-man group object for event handling towards systems. Constructor: `engine = ecs.Engine()`
+`engine = ecs.Engine()`
+The engine is the container for entities and systems to be used, and is a middle-man group object for event handling towards systems.
 
 `engine:addEntity(entity)`: Add an entity to the engine.
+
+`engine:getEntities(filter1, filter2, ...)`: Get all of the entities, given optional component filters. For example, `engine:getEntities(RectangleComponent)` would only give entities with a RectangleComponent.
 
 `engine:removeEntity(entity)`: Remove an entity from the engine.
 
 `engine:addSystem(system)`: Add a system to the engine.
 
+`engine:getSystems()`: Get all of the systems in the engine.
+
 `engine:removeSystem(system)`: Remove a system from the engine.
+
+`engine:addEventListener(event, listener)`: Add an event listener to the engine itself.
 
 `engine:fireEvent(event, ...)`: Send an event to systems in the engine.
 
