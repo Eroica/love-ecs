@@ -4,7 +4,8 @@ function MainMenu(gamestate)
 		'Option1', function() print "This option does nothing!" end,
 		'Option2', function() print "This option does nothing!" end,
 		'Option3', function() print "This option does nothing!" end,
-		'Game Start!', function() gamestate:switch(Game(gamestate)) end)
+		'Game Start!', function() gamestate:switch(Game(gamestate)) end,
+		'Quit', function() love.event.quit() end)
 
 	return ecs.Engine()
 		:addEntity(menu)
