@@ -55,6 +55,22 @@ The engine is the container for entities and systems to be used, and is a middle
 
 `engine:fireEvent(event, ...)`: Send an event to systems in the engine.
 
+### State Manager
+`stateman = ecs.StateManager()`  
+The state manager allows you to swap out engines, effectively emulating gamestates. The state manager also has a state stack with push and pop operations. The state manager can also register its events in LOVE's callbacks to automatically receive events. This object functions similarly to vrld's [hump](https://github.com/vrld/hump) gamestate library.
+
+`stateman:switch(engine)`: Set the current state to the current engine. This operation clears the stack.
+
+`stateman:push(engine)`: Push and engine to the stack and set it to the current engine.
+
+`popped = stateman:pop()`: Pop the last engine on the stack. If there are two or more engines, `popped` is true. If there is only one engine in the stack, the engine is not popped, and `popped` is false.
+
+`currentEngine = stateman:current()`: Get the current engine.
+
+`stateman:fireEvent(event, ...)`: Send an event to the current engine.
+
+`stateman:registerEvents([events])`: Register all LOVE events or a specific set of events, e.g. `stateman:registerEvents('update', 'draw')` only registers the update and draw events.
+
 Example Usage
 -------------
 ```lua
