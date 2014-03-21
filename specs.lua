@@ -194,7 +194,7 @@ describe("Engine", function()
 	end)
 
 	it("can bind events that don't process entities", function()
-		local engine = ecs.Engine()
+		ecs.Engine()
 			:addEventListener("test", function(msg) print(msg) end)
 			:fireEvent("test", "Engine event handler test!")
 	end)
