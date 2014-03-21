@@ -127,7 +127,7 @@ local function Entity()
 	return self
 end
 
-local function EngineStack()
+local function StateMachine()
 	local self = {}
 	local stack = { Engine() }
 
@@ -161,6 +161,14 @@ local function EngineStack()
 
 	function self:registerEvents(events)
 		events = events or allEvents
+		for i=1, #events do
+			local event = events[i]
+			local func = love[event]
+			love[event] = function(...)
+				self:fireEvent(event, ...)
+				if func then func(...) end
+			end
+		end
 		return self
 	end
 
@@ -171,5 +179,5 @@ return {
 	Entity = Entity,
 	System = System,
 	Engine = Engine,
-	EngineStack = EngineStack,
+	StateMachine = StateMachine,
 }

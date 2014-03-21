@@ -161,6 +161,14 @@ local function StateMachine()
 
 	function self:registerEvents(events)
 		events = events or allEvents
+		for i=1, #events do
+			local event = events[i]
+			local func = love[event]
+			love[event] = function(...)
+				self:fireEvent(event, ...)
+				if func then func(...) end
+			end
+		end
 		return self
 	end
 

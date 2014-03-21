@@ -7,18 +7,16 @@ function love.load()
 	require "game"
 
 	local gamestate = ecs.StateMachine()
+	gamestate:registerEvents()
 	gamestate:switch(Game())
+end
 
-	function love.keypressed(k)
-		gamestate:fireEvent("keypressed", k)
+function love.keypressed(k)
+	if k == 'escape' then
+		love.event.quit()
 	end
+end
 
-	function love.update(dt)
-		gamestate:fireEvent("update", dt)
-	end
-
-	function love.draw()
-		gamestate:fireEvent("draw")
-		love.graphics.print(love.timer.getFPS(), 10, 10)
-	end
+function love.draw()
+	love.graphics.print(love.timer.getFPS(), 10, 10)
 end
