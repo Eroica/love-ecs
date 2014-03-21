@@ -176,9 +176,13 @@ local function StateManager()
 	end
 
 	function self:pop()
-		local engine = table.remove(stack, #stack)
-		engine:fireEvent("leave")
-		return self
+		if #stack > 1 then
+			local engine = table.remove(stack, #stack)
+			engine:fireEvent("leave")
+			return true
+		else
+			return false
+		end
 	end
 
 	function self:current()
@@ -190,8 +194,11 @@ local function StateManager()
 		return self
 	end
 
-	function self:registerEvents(events)
-		events = events or allEvents
+	function self:registerEvents(...)
+		local events = {...}
+		if #events == 0 then
+			events = allEvents
+		end
 		for i=1, #events do
 			local event = events[i]
 			local func = love[event]
