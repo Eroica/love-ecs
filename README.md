@@ -7,7 +7,7 @@ Reference
 ---------
 
 ### Entities
-`entity = ecs.Entity()`
+`entity = ecs.Entity()`  
 The entity is a container for components that define its behavior. 
 
 `entity:add(component, arg1, arg2, ...)`: Adds a component to an entity. Accepts component _constructors_, not the components themselves.
@@ -28,7 +28,7 @@ end
 ```
 
 ### Systems
-`system = ecs.System(requiredComponent1, requiredComponent2, ...)`
+`system = ecs.System(requiredComponent1, requiredComponent2, ...)`  
 Systems are the logic in your game that operate on the components of entities. You have the option of passing a set of components that each entity used by the system is required to have.
 
 `system:addEventListener(event, func)`: Create an event listener for the system. The listener function receives an entity to operate on, and any additional event arguments.
@@ -36,7 +36,7 @@ Systems are the logic in your game that operate on the components of entities. Y
 `system:fireEvent(event, entityList, ...)`: Fire an event on an individual system and a list of entities.
 
 ### Engines
-`engine = ecs.Engine()`
+`engine = ecs.Engine()`  
 The engine is the container for entities and systems to be used, and is a middle-man group object for event handling towards systems.
 
 `engine:addEntity(entity)`: Add an entity to the engine.
