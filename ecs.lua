@@ -96,6 +96,26 @@ local function Engine()
 		return self
 	end
 
+	function self:getEntities(...)
+		local filters = {...}
+		if #filters == 0 then
+			return entities
+		else
+			local rtn = {}
+			for i=1, #entities do
+				local entity = entities[i]
+				for i=1, #filters do
+					if not entity:get(filters[i]) then
+						goto skip
+					end
+				end
+				table.insert(rtn, entity)
+				::skip::
+			end
+			return rtn
+		end
+	end
+
 	function self:removeEntity(entity)
 		searchAndDestroy(entities, entity)
 		return self
@@ -105,6 +125,10 @@ local function Engine()
 		assert(system, "No system given to add to engine.")
 		table.insert(systems, system)
 		return self
+	end
+
+	function self:getSystems()
+		return systems
 	end
 
 	function self:removeSystem(system)
