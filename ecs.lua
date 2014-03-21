@@ -78,6 +78,7 @@ local function Engine()
 	local self = {}
 	local entities = {}
 	local systems = {}
+	local eventHandler = System()
 
 	local function searchAndDestroy(list, target)
 		for i=1, #list do
@@ -111,7 +112,13 @@ local function Engine()
 		return self
 	end
 
+	function self:addEventListener(...)
+		eventHandler:addEventListener(...)
+		return self
+	end
+
 	function self:fireEvent(event, ...)
+		eventHandler:fireEvent(event, ...)
 		for i=1, #systems do
 			local system = systems[i]
 			for i=1, #entities do
@@ -127,7 +134,7 @@ local function Engine()
 	return self
 end
 
-local function StateKeeper()
+local function StateManager()
 	local self = {}
 	local stack = { Engine() }
 
@@ -179,5 +186,5 @@ return {
 	Entity = Entity,
 	System = System,
 	Engine = Engine,
-	StateKeeper = StateKeeper,
+	StateManager = StateManager,
 }
