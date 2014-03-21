@@ -41,13 +41,13 @@ The engine is the container for entities and systems to be used, and is a middle
 
 `engine:addEntity(entity)`: Add an entity to the engine.
 
-`engine:getEntities(filter1, filter2, ...)`: Get all of the entities, given optional component filters. For example, `engine:getEntities(RectangleComponent)` would only give entities with a RectangleComponent.
+`entities = engine:getEntities(filter1, filter2, ...)`: Get all of the entities, given optional component filters. For example, `engine:getEntities(RectangleComponent)` would only give entities with a RectangleComponent.
 
 `engine:removeEntity(entity)`: Remove an entity from the engine.
 
 `engine:addSystem(system)`: Add a system to the engine.
 
-`engine:getSystems()`: Get all of the systems in the engine.
+`systems = engine:getSystems()`: Get all of the systems in the engine.
 
 `engine:removeSystem(system)`: Remove a system from the engine.
 
