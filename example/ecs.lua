@@ -127,7 +127,7 @@ local function Entity()
 	return self
 end
 
-local function EngineStack()
+local function StateMachine()
 	local self = {}
 	local stack = { Engine() }
 
@@ -171,5 +171,5 @@ return {
 	Entity = Entity,
 	System = System,
 	Engine = Engine,
-	EngineStack = EngineStack,
+	StateMachine = StateMachine,
 }

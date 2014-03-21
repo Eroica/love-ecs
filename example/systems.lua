@@ -66,7 +66,3 @@ function InputSystem()
 			end
 		end)
 end
-
-function AISystem()
-	return ecs.System(Walking, Jumping)
-end
