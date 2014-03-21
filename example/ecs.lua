@@ -6,6 +6,74 @@ local allEvents = {
 	'quit',
 }
 
+local function Entity()
+	local self = {}
+	local components = {}
+
+	function self:add(component, ...)
+		assert(component, "No component given to add to entity.")
+		components[component] = component(...)
+		return self
+	end
+
+	function self:remove(component)
+		components[component] = nil
+		return self
+	end
+
+	function self:get(...)
+		local args = {...}
+		local componentList = {}
+		for i=1, #args do
+			componentList[i] = components[args[i]]
+		end
+		return unpack(componentList)
+	end
+
+	function self:destroy()
+		if self.engine then
+			self.engine:removeEntity(self)
+		end
+		return self
+	end
+
+	return self
+end
+
+local function System(...)
+	local self = {}
+	local requiredComponents = {...}
+	local eventListeners = {}
+
+	function self:hasRequiredComponents(entity)
+		if #requiredComponents == 0 then
+			return true
+		end
+		for i=1, #requiredComponents do
+			if not entity:get(requiredComponents[i]) then
+				return false
+			end
+		end
+		return true
+	end
+
+	function self:addEventListener(event, listener)
+		eventListeners[event] = eventListeners[event] or {}
+		table.insert(eventListeners[event], listener)
+		return self
+	end
+
+	function self:fireEvent(event, ...)
+		local listeners = eventListeners[event] or {}
+		for i=1, #listeners do
+			listeners[i](...)
+		end
+		return self
+	end
+
+	return self
+end
+
 local function Engine()
 	local self = {}
 	local entities = {}
@@ -59,75 +127,7 @@ local function Engine()
 	return self
 end
 
-local function System(...)
-	local self = {}
-	local requiredComponents = {...}
-	local eventListeners = {}
-
-	function self:hasRequiredComponents(entity)
-		if #requiredComponents == 0 then
-			return true
-		end
-		for i=1, #requiredComponents do
-			if not entity:get(requiredComponents[i]) then
-				return false
-			end
-		end
-		return true
-	end
-
-	function self:addEventListener(event, listener)
-		eventListeners[event] = eventListeners[event] or {}
-		table.insert(eventListeners[event], listener)
-		return self
-	end
-
-	function self:fireEvent(event, ...)
-		local listeners = eventListeners[event] or {}
-		for i=1, #listeners do
-			listeners[i](...)
-		end
-		return self
-	end
-
-	return self
-end
-
-local function Entity()
-	local self = {}
-	local components = {}
-
-	function self:add(component, ...)
-		assert(component, "No component given to add to entity.")
-		components[component] = component(...)
-		return self
-	end
-
-	function self:remove(component)
-		components[component] = nil
-		return self
-	end
-
-	function self:get(...)
-		local args = {...}
-		local componentList = {}
-		for i=1, #args do
-			componentList[i] = components[args[i]]
-		end
-		return unpack(componentList)
-	end
-
-	function self:destroy()
-		if self.engine then
-			self.engine:removeEntity(self)
-		end
-		return self
-	end
-
-	return self
-end
-
-local function StateMachine()
+local function StateKeeper()
 	local self = {}
 	local stack = { Engine() }
 
