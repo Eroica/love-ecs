@@ -179,5 +179,5 @@ return {
 	Entity = Entity,
 	System = System,
 	Engine = Engine,
-	StateMachine = StateMachine,
+	StateKeeper = StateKeeper,
 }
