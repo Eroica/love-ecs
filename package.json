@@ -1,0 +1,14 @@
+{
+  "name": "ecs",
+  "version": "1.0.1",
+  "description": "",
+  "type": "module",
+  "main": "ecs.js",
+  "module": "ecs.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Eroica",
+  "license": "Zlib",
+  "files": ["ecs.js", "ecs.d.ts"]
+}
