@@ -27,6 +27,13 @@ const Events = {
 	resize: "resize"
 }
 
+class ComponentNotFound extends Error {
+	constructor(message) {
+		super(message);
+		this.name = "ComponentNotFound";
+	}
+}
+
 function Entity () {
 	this.components = new WeakMap();
 }
@@ -42,7 +49,12 @@ Entity.prototype.get = function (...components) {
 	return components.map((component) => this.components.get(component));
 };
 Entity.prototype.getComponent = function (component) {
-	return this.components.get(component);
+	const c = this.components.get(component);
+	if (c == null) {
+		throw new ComponentNotFound(`Component ${component} was not found in this entity!`);
+	}
+
+	return c;
 };
 Entity.prototype.setComponent = function (cls, component) {
 	this.components.set(cls, component);

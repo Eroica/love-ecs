@@ -4,6 +4,12 @@ A basic ECS implementation, originally made by [itsMapleLeaf](https://github.com
 
 When I needed a simple ECS library for some three.js projects, I converted the code to JavaScript.
 
+## Reference
+
+### Entity
+
+You can call `get(ComponentA, ComponentB)` or `getComponent(ComponentA)` on an entity. The first returns an array of components, but it can contain `undefined` if that component was not added to the entity. Use the latter as a "non-nullable" variant because it will throw an error if the component was not found.
+
 ## Example usage
 
 ```javascript
@@ -30,10 +36,11 @@ const moveStuff = new ecs.System(RectangleComponent, MovingComponent)
 /* Listeners take in any extra args given when fired. Chaining is allowed. */
     .addEventListener(ecs.Events.update, (entity, dt) => {
         /* Get the components by their constructor */
-        const rect = entity.get(RectangleComponent);
-        const movement = entity.get(MovingComponent);
+        const rect = entity.getComponent(RectangleComponent);
+        /* Use destructuring to simplify variable access */
+        const { speed } = entity.getComponent(MovingComponent);
 
-        rect.x = rect.x + movement.speed * dt;
+        rect.x = rect.x + speed * dt;
     });
 
 /* Entities are "bags" of components. */

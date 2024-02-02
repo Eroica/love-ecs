@@ -17,7 +17,7 @@ declare class Entity {
 
 	get<T extends new (...args: any[]) => any>(...components: T[]): InstanceType<T>[];
 
-	getComponent<T extends new (...args: any[]) => any>(component: T): InstanceType<T> | undefined;
+	getComponent<T extends new (...args: any[]) => any>(component: T): InstanceType<T>;
 
 	setComponent<T extends new (...args: any[]) => any>(cls: T, component: InstanceType<T>): void;
 
