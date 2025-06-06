@@ -9,14 +9,14 @@
  * including commercial applications, and to alter it and redistribute
  * it freely, subject to the following restrictions:
  *
- *   1. The origin of this software must not be misrepresented; you must
- *      not claim that you wrote the original software. If you use this
- *      software in a product, an acknowledgment in the product
- *      documentation would be appreciated but is not required.
- *   2. Altered source versions must be plainly marked as such, and must
- *      not be misrepresented as being the original software.
- *   3. This notice may not be removed or altered from any source
- *      distribution.
+ * 1. The origin of this software must not be misrepresented; you must
+ *    not claim that you wrote the original software. If you use this
+ *    software in a product, an acknowledgment in the product
+ *    documentation would be appreciated but is not required.
+ * 2. Altered source versions must be plainly marked as such, and must
+ *    not be misrepresented as being the original software.
+ * 3. This notice may not be removed or altered from any source
+ *    distribution.
  */
 
 const Events = {
@@ -68,24 +68,17 @@ Entity.prototype.destroy = function () {
 
 function System (...components) {
 	this.requiredComponents = components.flat();
-	this.eventListeners = {};
+	this.eventListeners = new Map();
 }
 System.prototype.hasRequiredComponents = function (entity) {
-	if (this.requiredComponents.length === 0) {
-		return true;
-	}
-
-	for (let i=0; i < this.requiredComponents.length; i++) {
-		if (entity.components.get(this.requiredComponents[i]) === undefined) {
-			return false;
-		}
-	}
-
-	return true;
+	return this.requiredComponents.length === 0 ||
+		this.requiredComponents.every((c) => entity.components.has(c));
 };
 System.prototype.addEventListener = function (event, listener) {
-	this.eventListeners[event] = this.eventListeners[event] || [];
-	this.eventListeners[event].push(listener);
+	if (!this.eventListeners.has(event)) {
+		this.eventListeners.set(event, []);
+	}
+	this.eventListeners.get(event).push(listener);
 	return this;
 };
 System.prototype.fireEvent = function (event, ...args) {
@@ -97,43 +90,33 @@ System.prototype.fireEvent = function (event, ...args) {
 };
 
 function Engine () {
-	this.entities = [];
+	this.entities = new Set();
 	this.systems = [];
 	this.eventHandler = new System();
 }
 Engine.prototype.searchAndDestroy = function (list, target) {
-	for (let i = 0; i < list.length; i++) {
-		if (list[i] === target) {
-			list.splice(i, 1);
-			return;
-		}
+	const index = list.indexOf(target);
+
+	if (index !== -1) {
+		list.splice(index, 1);
 	}
 };
 Engine.prototype.addEntity = function (entity) {
-	this.entities.push(entity);
+	this.entities.add(entity);
 	entity.engine = this;
 	return this;
 };
 Engine.prototype.getEntities = function (...components) {
 	if (components.length === 0) {
-		return this.entities;
-	} else {
-		const rtn = [];
-
-		loopAllEntities: for (let entity of this.entities) {
-			for (let component of components) {
-				if (entity.get(component)[0] === undefined) {
-					continue loopAllEntities;
-				}
-			}
-			rtn.push(entity);
-		}
-
-		return rtn;
+		return [...this.entities];
 	}
+
+	return [...this.entities].filter(entity =>
+		components.every(component => entity.get(component)[0] !== undefined)
+	);
 };
 Engine.prototype.removeEntity = function (entity) {
-	this.searchAndDestroy(this.entities, entity);
+	this.entities.delete(entity);
 	return this;
 };
 Engine.prototype.addSystem = function (system) {
